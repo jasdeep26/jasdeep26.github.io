@@ -40,8 +40,8 @@
                         <option value="en-GB">English - GB</option>
                         <option value="en-IN">English - IN</option>
                         <option value="en-NZ">English - NZ</option>
-                        <option value="en-US" selected="selected">English - US</option>
-                        <option value="es-ES">Spanish - ES</option>
+                        <option value="en-US">English - US</option>
+                        <option value="es-ES" selected="selected">Spanish - ES</option>
                         <option value="es-MX">Spanish - MX</option>
                         <option value="fi-FI">Finnish - FI</option>
                         <option value="fr-CA">French - CA</option>
@@ -357,6 +357,11 @@
                 reco = new SpeechSDK.SpeechRecognizer(speechConfig, audioConfig);
 
                 // Before beginning speech recognition, setup the callbacks to be invoked when an event occurs.
+                // If Phrases are specified, include them.
+                if (phrases !== "") {
+                    var phraseListGrammar = SpeechSDK.PhraseListGrammar.fromRecognizer(reco);
+                    phraseListGrammar.addPhrase(phrases.value.split(";"));
+                }
 
                 // The event recognizing signals that an intermediate recognition result is received.
                 // You will receive one or more recognizing events as a speech phrase is recognized, with each containing
