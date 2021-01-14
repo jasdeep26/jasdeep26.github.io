@@ -4,227 +4,257 @@
 <head>
     <title>Speech Sample</title>
     <meta charset="utf-8" />
+    <style>
+        html{
+            font-size: 2vh;
+        }
+        body{
+            background-color: black;
+            color: grey;
+        }
+
+        .box {
+            font-size: 1rem;
+            position: absolute;
+            bottom: 5rem;
+            left: 50%;
+        }
+
+        .object {
+            display: flex;
+            flex: 0 1 100%;
+            justify-content: center;
+            align-items: center;
+            align-content: stretch;
+        }
+
+        .outline {
+            width: 2em;
+            height: 2em;
+            border-radius: 50%;
+            border: 0.25em solid #B5A4A4;
+            animation: pulse 3s;
+            animation-timing-function: ease-out;
+            animation-iteration-count: infinite;
+            position: absolute;
+        }
+
+        .button {
+            width: 4em;
+            height: 4em;
+            border-radius: 50%;
+            background: #50CDDD;
+            box-shadow: 0px 0px 2.5em #0084F9;
+            position: absolute;
+            cursor: pointer;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+                border: 2em solid #0B3082;
+            }
+            50% {
+                border: solid #A3FFC2;		
+                opacity: 0.8;
+            }
+            
+            90% {
+                transform: scale(3.2);
+                opacity: 0.2;
+                border: 3px solid #2E3CFF;
+            }
+            100% {
+                transform: scale(3.3);
+                opacity: 0;
+                border: 1px solid #7A89FF;
+            }
+        }
+
+        #delayed {
+            animation-delay: 1.5s;
+        }
+
+        #circlein {
+            width: 3.3em;
+            height: 3.3em;
+            border-radius: 50%;
+            background: #6BD6E1;
+            box-shadow: 0px -2px 0.5em #E0FF94;
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .mic-icon {
+            height: 2em;
+            position: absolute;
+            margin: 0.7em;
+        }
+
+        .hide{
+            display: none;
+        }
+
+        .microphone .mic-off{
+            box-shadow: none;
+        }
+
+        .output{
+            text-align: center;
+            margin: 4rem auto;
+            position: absolute;
+            bottom: 6rem;
+            width: 80%;
+            left: 10%;
+            color: grey;
+            font-size: 3rem;
+        }
+
+        .status{
+            /* display: none; */
+            background: inherit;
+            color: inherit;
+            height: 35vh;
+            width: 100%;
+
+        }
+    </style>
 </head>
 
-<body style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; font-size:13px;">
-    <div id="warning">
-        <h1 style="font-weight:500;">Speech Recognition Speech SDK not found
-            (microsoft.cognitiveservices.speech.sdk.bundle.js missing).</h1>
-    </div>
+<body style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
     <div id="content" style="display:none">
-        <table>
-            <tr>
-                <td></td>
-                <td>
-                    <h1 style="font-weight:500;">Speech Recognition</h1>
-                    <h2 style="font-weight:500;">Microsoft Cognitive Services</h2>
-                </td>
-            </tr>
-            <tr>
-                <td align="right"><a href="https://www.microsoft.com/cognitive-services/sign-up"
-                        target="_blank">Subscription</a>:</td>
-                <td><input id="key" type="text" size="40" value=""><b>YOUR_SPEECH_API_KEY</b></td>
-            </tr>
-            <tr>
-                <td align="right">Language:</td>
-                <td align="left">
-                    <!-- For the full list of supported languages see: https://docs.microsoft.com/azure/cognitive-services/speech-service/supported-languages -->
-                    <select id="languageOptions">
-                        <option value="ar-EG">Arabic - EG</option>
-                        <option value="ca-ES">Catalan - ES</option>
-                        <option value="da-DK">Danish - DK</option>
-                        <option value="da-DK">Danish - DK</option>
-                        <option value="de-DE">German - DE</option>
-                        <option value="en-AU">English - AU</option>
-                        <option value="en-CA">English - CA</option>
-                        <option value="en-GB">English - GB</option>
-                        <option value="en-IN">English - IN</option>
-                        <option value="en-NZ">English - NZ</option>
-                        <option value="en-US">English - US</option>
-                        <option value="es-ES" selected="selected">Spanish - ES</option>
-                        <option value="es-MX">Spanish - MX</option>
-                        <option value="fi-FI">Finnish - FI</option>
-                        <option value="fr-CA">French - CA</option>
-                        <option value="fr-FR">French - FR</option>
-                        <option value="hi-IN">Hindi - IN</option>
-                        <option value="it-IT">Italian - IT</option>
-                        <option value="ja-JP">Japanese - JP</option>
-                        <option value="ko-KR">Korean - KR</option>
-                        <option value="nb-NO">Norwegian - NO</option>
-                        <option value="nl-NL">Dutch - NL</option>
-                        <option value="pl-PL">Polish - PL</option>
-                        <option value="pt-BR">Portuguese - BR</option>
-                        <option value="pt-PT">Portuguese - PT</option>
-                        <option value="ru-RU">Russian - RU</option>
-                        <option value="sv-SE">Swedish - SE</option>
-                        <option value="zh-CN">Chinese - CN</option>
-                        <option value="zh-HK">Chinese - HK</option>
-                        <option value="zh-TW">Chinese - TW</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td align="right">Region:</td>
-                <td align="left">
-                    <select id="regionOptions">
-                        <option value="westus">West US</option>
-                        <option value="westus2">West US2</option>
-                        <option value="eastus" selected="selected">East US</option>
-                        <option value="eastus2">East US2</option>
-                        <option value="eastasia">East Asia</option>
-                        <option value="southeastasia">South East Asia</option>
-                        <option value="northeurope">North Europe</option>
-                        <option value="westeurope">West Europe</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td align="right">Format:</td>
-                <td align="left">
-                    <select id="formatOptions">
-                        <option value="Simple" selected="selected">Simple Result</option>
-                        <option value="Detailed">Detailed Result</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td align="right">Input:</td>
-                <td align="left">
-                    <select id="inputSource">
-                        <option value="Mic" selected="selected">Microphone</option>
-                        <option value="File">Audio File</option>
-                    </select>
-                    <select id="microphoneSource" style="display:none">
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td></td>
-                <td>
-                    <input type="file" id="filePicker" accept=".wav" style="display:none" />
-                </td>
-            </tr>
-            <tr>
-                <td align="right"><b>Speech SDK API recognizeOnceAsync:</b></td>
-                <td>
-                    <button id="speechsdkStartRecognizeOnceAsync">recognizeOnceAsync()</button>
-                    <button id="speechsdkStopRecognizeOnceAsync" disabled="disabled">STOP recognizeOnceAsync()</button>
-                </td>
-            </tr>
-            <tr>
-                <td align="right"><b>Speech SDK API Continuous Speech Recognition:</b></td>
-                <td>
-                    <button id="speechsdkStartContinuousRecognition">startContinuousRecognitionAsync()</button>
-                    <button id="speechsdkStopContinuousRecognition" disabled="disabled">STOP
-                        stopContinuousRecognitionAsync()</button>
-                </td>
-            </tr>
-            <tr>
-                <td align="right"><b>Speech SDK API Translation:</b></td>
-                <td>
-                    <button id="speechsdkStartContinuousTranslation">startContinuousTranslation()</button>
-                    <button id="speechsdkStopContinuousTranslation" disabled="disabled">STOP
-                        stopContinuousTranslation()</button>
-
-                    <!-- For a full list of supported languages see: https://docs.microsoft.com/azure/cognitive-services/speech-service/language-support#text-to-speech-->
-                    <select id="languageTargetOptions">
-                        <option value="Microsoft Server Speech Text to Speech Voice (ar-EG, Hoda)">Arabic - EG</option>
-                        <option value="Microsoft Server Speech Text to Speech Voice (ca-ES, HerenaRUS)">Catalan - ES
-                        </option>
-                        <option value="Microsoft Server Speech Text to Speech Voice (da-DK, HelleRUS)">Danish - DK
-                        </option>
-                        <option value="Microsoft Server Speech Text to Speech Voice (de-DE, Hedda)" selected="selected">
-                            German - DE</option>
-                        <option value="Microsoft Server Speech Text to Speech Voice (en-AU, Catherine)">English - AU
-                        </option>
-                        <option value="Microsoft Server Speech Text to Speech Voice (en-CA, Linda)">English - CA
-                        </option>
-                        <option value="Microsoft Server Speech Text to Speech Voice (en-GB, Susan, Apollo)">English - GB
-                        </option>
-                        <option value="Microsoft Server Speech Text to Speech Voice (en-IN, Heera, Apollo)">English - IN
-                        </option>
-                        <option value="Microsoft Server Speech Text to Speech Voice (en-US, ZiraRUS)">English - US
-                        </option>
-                        <option value="Microsoft Server Speech Text to Speech Voice (es-ES, Laura, Apollo)">Spanish - ES
-                        </option>
-                        <option value="Microsoft Server Speech Text to Speech Voice (es-MX, HildaRUS)">Spanish - MX
-                        </option>
-                        <option value="Microsoft Server Speech Text to Speech Voice (fi-FI, HeidiRUS)">Finnish - FI
-                        </option>
-                        <option value="Microsoft Server Speech Text to Speech Voice (fr-CA, Caroline)">French - CA
-                        </option>
-                        <option value="Microsoft Server Speech Text to Speech Voice (fr-FR, Julie, Apollo)">French - FR
-                        </option>
-                        <option value="Microsoft Server Speech Text to Speech Voice (hi-IN, Hemant)">Hindi - IN</option>
-                        <option value="Microsoft Server Speech Text to Speech Voice (it-IT, LuciaRUS)">Italian - IT
-                        </option>
-                        <option value="Microsoft Server Speech Text to Speech Voice (ja-JP, Ayumi, Apollo)">Japanese -
-                            JP</option>
-                        <option value="Microsoft Server Speech Text to Speech Voice (ko-KR, HeamiRUS)">Korean - KR
-                        </option>
-                        <option value="Microsoft Server Speech Text to Speech Voice (nb-NO, HuldaRUS)">Norwegian - NO
-                        </option>
-                        <option value="Microsoft Server Speech Text to Speech Voice (nl-NL, HannaRUS)">Dutch - NL
-                        </option>
-                        <option value="Microsoft Server Speech Text to Speech Voice (pl-PL, PaulinaRUS)">Polish - PL
-                        </option>
-                        <option value="Microsoft Server Speech Text to Speech Voice (pt-BR, HeloisaRUS)">Portuguese - BR
-                        </option>
-                        <option value="Microsoft Server Speech Text to Speech Voice (pt-PT, HeliaRUS)">Portuguese - PT
-                        </option>
-                        <option value="Microsoft Server Speech Text to Speech Voice (ru-RU, Irina, Apollo)">Russian - RU
-                        </option>
-                        <option value="Microsoft Server Speech Text to Speech Voice (sv-SE, HedvigRUS)">Swedish - SE
-                        </option>
-                        <option value="Microsoft Server Speech Text to Speech Voice (zh-CN, Kangkang, Apollo)">Chinese -
-                            CN</option>
-                        <option value="Microsoft Server Speech Text to Speech Voice (zh-HK, Tracy, Apollo)">Chinese - HK
-                        </option>
-                        <option value="Microsoft Server Speech Text to Speech Voice (zh-TW, Yating, Apollo)">Chinese -
-                            TW</option>
-                    </select>
-                    <input id="voiceOutput" type="checkbox" checked>
-                    <label for="voiceOutput">voice output</label>
-                </td>
-            </tr>
-            <tr>
-                <td align="right"><b>Speech SDK API Intent Recognition:</b></td>
-                <td>
-                    <button id="speechsdkIntentStartRecognizeOnceAsync">recognizeOnceAsync()</button>
-                    <button id="speechsdkIntentStopRecognizeOnceAsync" disabled="disabled">STOP
-                        recognizeOnceAsync()</button>
-                </td>
-            </tr>
-            <tr>
-                <td align="right">Application ID:</td>
-                <td>
-                    <input id="appId" type="text" size="60" value="YOUR_LANGUAGE_UNDERSTANDING_APP_ID">(only needed for
-                    intent recognition)
-                </td>
-            </tr>
-            <tr>
-                <td align="right">Phrase List Values:</td>
-                <td>
-                    <input id="phrases" type="text" size="60" value="">(';' separated list)
-                </td>
-            </tr>
-            <tr>
-                <td align="right">Results:</td>
-                <td align="left">
-                    <textarea id="phraseDiv" style="display: inline-block;width:500px;height:200px"></textarea>
-                </td>
-            </tr>
-            <tr>
-                <td align="right">Events:</td>
-                <td align="left"><textarea id="statusDiv"
-                        style="display: inline-block;width:500px;height:200px;overflow: scroll;white-space: nowrap;"></textarea>
-                </td>
-            </tr>
-        </table>
+        <div id="phraseDiv" class="output"></div>
+        <textarea id="statusDiv" class="status"></textarea>
+        <div class="box microphone">
+            <div class="object">
+                   <div class="outline mic-on mic-toggle hide">
+                   </div>
+                   <div class="outline mic-on mic-toggle hide" id="delayed">
+                   </div>
+                   <div class="button mic-off mic-toggle" id="speechsdkStartRecognizeOnceAsync">
+                   </div>
+                   <div class="button mic-on mic-toggle hide" id="speechsdkStopRecognizeOnceAsync">
+                   </div>
+                   <div class="button" id="circlein">
+                       <svg class="mic-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve" style="fill:#1E2D70">
+                        <g><path d="M500,683.8c84.6,0,153.1-68.6,153.1-153.1V163.1C653.1,78.6,584.6,10,500,10c-84.6,0-153.1,68.6-153.1,153.1v367.5C346.9,615.2,415.4,683.8,500,683.8z M714.4,438.8v91.9C714.4,649,618.4,745,500,745c-118.4,0-214.4-96-214.4-214.4v-91.9h-61.3v91.9c0,141.9,107.2,258.7,245,273.9v124.2H346.9V990h306.3v-61.3H530.6V804.5c137.8-15.2,245-132.1,245-273.9v-91.9H714.4z"/></g>
+                        </svg>
+                   </div>
+            </div>
+       </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.js"></script>
 
     <!-- Speech SDK REFERENCE -->
     <script src="microsoft.cognitiveservices.speech.sdk.bundle.js"></script>
+
+    <script>
+        (function(global) {
+            if(!global) {
+                throw "Global Window object is not available.";
+            }
+            if(!Fuse) {
+                throw "Fuse object is not available.";
+            }
+            
+            var FuzzyTransformer = function(list, options) {
+                return new FuzzyTransformer.init(list, options);
+            }
+            
+            var fuseOptions = {
+                // isCaseSensitive: false,
+                includeScore: true,
+                // shouldSort: true,
+                includeMatches: true,
+                // findAllMatches: false,
+                // minMatchCharLength: 1,
+                // location: 0,
+                // threshold: 0.6,
+                // distance: 100,
+                // useExtendedSearch: false,
+                // ignoreLocation: false,
+                // ignoreFieldNorm: false,
+                // keys: [
+                //     "title",
+                //     "author.firstName" 
+                // ],
+                fuseThreshold: 0.25
+                };
+            
+            var _getMatch = function (str){
+            var self = this;
+            //ignore for short words
+            if(str.length > 2){
+                // console.log(str);
+                var f = self.fuse.search(str);
+                // console.log(f);
+                for(var i in f){
+                    if(f[i].score < self.options.fuseThreshold){
+                        return f[i];
+                    }
+                }
+            }
+            return false;
+            }
+            
+            //Create a new init function constructor and return it when FuzzyTransformer method is called.
+            //It is also a pattern used in jQuery
+            FuzzyTransformer.init = function(mappings, options) {
+                var self = this;
+                self.mappings = mappings || {};
+                self.list = Object.keys(self.mappings) || [];
+                self.options =  {...fuseOptions, ...options};
+                self.fuse = new Fuse(self.list, self.options);
+                self._getMatch = _getMatch;
+            }
+            
+            //Attach all the properties you want to expose out from this library to the users.
+            FuzzyTransformer.prototype = {
+                transform: function(str) {
+                    var self = this;
+                    //ToDo find replace Í with I etc.
+
+                    var ss = str.split(' ');
+                    var ret = [...ss];
+
+                    for(let s=0; s < ss.length; s++){ 
+
+                        var match = self._getMatch(ss[s])
+                        if(match){
+                        // ToDo verify
+                        /* if(match.item.split(' ').length == 1) */
+                        ret[s] = fuseMap[match.item];
+
+                        }
+
+                        if(s < ss.length - 1){
+
+                        var s2 = ss[s] + ' ' + ss[s + 1];
+                        var match = self._getMatch(s2)
+                        if(match){
+                            if(ret[s] == ss[s]){
+                            ret[s] = fuseMap[match.item];
+                            ret[s + 1] = ""
+                            }
+                        }
+                        }
+                    }
+
+                    return ret.join(' ');
+
+                }
+            };
+            
+            //When var out = FT$(...); is used outside this library, out.prototype should be able to access all the properties of FuzzyTransformer.
+            //Therefore FuzzyTransformer.init() function constructor's prototype should point to FuzzyTransformer prototype.
+            FuzzyTransformer.init.prototype = FuzzyTransformer.prototype;
+            
+            //Creating alias so that user can call using FuzzyTransformer(...) or $FT(...)
+            global.FuzzyTransformer = global.$FT = FuzzyTransformer;
+        }(window));
+    </script>
 
     <!-- Speech Speech SDK Authorization token -->
     <script>
@@ -234,21 +264,54 @@
         // An authorization token is a more secure method to authenticate for a browser deployment as
         // it allows the subscription keys to be kept secure on a server and a 10 minute use token to be
         // handed out to clients from an endpoint that can be protected from unauthorized access.
-        var authorizationEndpoint = "https://speechtest2.azurewebsites.net/";
+
+
+        var config = {
+            authorizationEndpoint: 'https://speechtest2.azurewebsites.net/',
+            language: 'es-ES',
+            // phrases:  ["WOMAN", "BASIC", "TRF", "COMPLEMENTOS", "PUNTO", "CIRCULAR", "LENCERIA", "ZARA STUDIO", "GYMWEAR", "UNIFORMES", "GENERICO REBAJAS"],
+            phrases: 'VESTIR;CIRCULAR;UNIFORMES;GENERICO REBAJAS;DENIM;SPORT;PUNTO;COMPLEMENTOS;ZARA STUDIO CRO;BYO;ACCESORIOS;GENERICO REBAJAS;ZARA STUDIO;NINA;NINO;PUNTO;BYA;MINI;WOMAN;TRF;PUNTO;UNIFORMES;GENERICO REBAJAS;CIRCULAR;GYMWEAR;BASIC;COMPLEMENTOS;ZARA STUDIO;LENCERIA;\
+            ALEMANIA;AUSTRIA;KUWAIT;ARABIA SAUDI;HOLANDA;PAISES BAJOS;FRANCIA;MEXICO;MEXICO;EMIRATOS ARABES;POLONIA;JAPON;CANADA;RUSIA;TAIWAN;LUXEMBURGO;MAINLAND CHINA;MAINLAND CHINA;CHINA;MALASIA;JORDANIA;SINGAPUR;ITALIA;INDONESIA;UCRANIA;TAILANDIA;ESLOVAQUIA;ALBANIA;COLOMBIA;ANDORRA;TURQUIA;VENEZUELA;GEORGIA;SUIZA;LETONIA;REPUBLICA CHECA;MALTA;ARGELIA;PORTUGAL;ESLOVENIA;MONACO;COREA DEL SUR;U.S.A.;USA;EEUU;ESTADOS UNIDOS;NORUEGA;IRLANDA;HONG KONG SAR;HONG KONG;CROACIA;HONDURAS;SIRIA;AZERBAIYAN;AZERBAIYAN;OMAN;OMAN SULTANATO;GUATEMALA;CD2;DINAMARCA;GRAN BRETAÑA;REINO UNIDO;UK;UK;INDIA;BULGARIA;VIETNAM;PUNTO COM INTERNACIONAL;BELGICA;CHIPRE;FILIPINAS;HUNGRIA;ISRAEL;BAHRAIN;MONTENEGRO;BIELORRUSIA;EL SALVADOR;ECUADOR;REPUBLICA DOMINICANA;AUSTRALIA;ESTONIA;BRASIL;LITUANIA;SUDAFRICA;ISLANDIA;LIBANO;COSTA RICA;PANAMA;ESPAÑA;EGIPTO;TUNEZ;QATAR;PUNTO COM;DOT COM;ARUBA;SUECIA;RUMANIA;KAZAJISTAN;SERBIA;KOSOVO;FINLANDIA;MACAO SAR;MACAO;BOSNIA HERZEGOVINA;BOSNIA;NICARAGUA;GRECIA;MARRUECOS;ARMENIA',
+            mapping: {
+                'Me muero': 'GYMWEAR',
+                'Jim, ver': 'GYMWEAR',
+                'Trafa': 'TRF',
+                'ZARA STUDIO CABALLERO': 'ZARA STUDIO CRO',
+                'cd dos': 'CD2',
+
+            },
+            // Auto refresh token every 9 minutes as token validity is 10 minutes
+            // Alternate approach: On demand refresh
+            tokenRefreshTime: 9*60*1000,
+            // todo delete
+            subscriptionKey: 'c1da21d71a7b4bc9818068378b73ece0',
+            region: 'eastus'
+        };
+        
+        var ph = {};
+        config.phrases.split(';').map((i)=> ph[i] = i);
+        var fuseMap = {...config.mapping, ...ph};
+
+        var mapper = FuzzyTransformer(fuseMap);
 
         function RequestAuthorizationToken() {
-            if (authorizationEndpoint) {
+            if (config.authorizationEndpoint) {
                 var a = new XMLHttpRequest();
-                a.open("GET", authorizationEndpoint);
+                a.open("GET", config.authorizationEndpoint);
                 a.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                 a.send("");
                 a.onload = function () {
                     var token = JSON.parse(atob(this.responseText.split(".")[1]));
-                    regionOptions.value = token.region;
+                    tokenRegion = token.region;
                     authorizationToken = this.responseText;
-                    key.disabled = true;
-                    key.value = "using authorization token (hit F5 to refresh)";
-                    console.log("Got an authorization token: " + token);
+                    // authorizationToken = 'eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJyZWdpb24iOiJlYXN0dXMiLCJzdWJzY3JpcHRpb24taWQiOiJkMzM2MDU3YWQxMDA0YTIyYjUyZDg2ZGUwOTQzMjZhYSIsInByb2R1Y3QtaWQiOiJTcGVlY2hTZXJ2aWNlcy5GMCIsImNvZ25pdGl2ZS1zZXJ2aWNlcy1lbmRwb2ludCI6Imh0dHBzOi8vYXBpLmNvZ25pdGl2ZS5taWNyb3NvZnQuY29tL2ludGVybmFsL3YxLjAvIiwiYXp1cmUtcmVzb3VyY2UtaWQiOiIvc3Vic2NyaXB0aW9ucy8zNjQ5NzA5MC1jMzE1LTRmNTAtODIwMS1kMWUyNWVjZDc3YTcvcmVzb3VyY2VHcm91cHMvSlNLLVJlY29nbml6ZVRleHQvcHJvdmlkZXJzL01pY3Jvc29mdC5Db2duaXRpdmVTZXJ2aWNlcy9hY2NvdW50cy9TcGVlY2gyIiwic2NvcGUiOiJzcGVlY2hzZXJ2aWNlcyIsImF1ZCI6InVybjptcy5zcGVlY2hzZXJ2aWNlcy5lYXN0dXMiLCJleHAiOjE2MDk5MTU2NTUsImlzcyI6InVybjptcy5jb2duaXRpdmVzZXJ2aWNlcyJ9.kitHykyVIjskkZnRX4weyHdY1iJpoXic8ntvwZmmx4A'
+                    console.log("Got an authorization token: ");
+                    console.log(token);
+
+                    // setTimeout(()=>{
+                    //     authorizationToken = '';
+                    //     RequestAuthorizationToken();
+                    // }, config.tokenRefreshTime)
                 }
             }
         }
@@ -260,7 +323,7 @@
         function Initialize(onComplete) {
             if (!!window.SpeechSDK) {
                 document.getElementById('content').style.display = 'block';
-                document.getElementById('warning').style.display = 'none';
+                // document.getElementById('warning').style.display = 'none';
                 onComplete(window.SpeechSDK);
             }
         }
@@ -268,21 +331,14 @@
 
     <!-- Browser Hooks -->
     <script>
+        
         var phraseDiv, statusDiv;
-        var key, authorizationToken, appId, phrases;
-        var regionOptions;
-        var languageOptions, formatOptions, inputSource, filePicker, microphoneSource;
+        var authorizationToken, tokenRegion;
         var SpeechSDK;
-        var recognizer;
 
         var reco;
-        var sdkStartContinousRecognitionBtn, sdkStopContinousRecognitionBtn;
-        var sdkStartContinousTranslationBtn, sdkStopContinousTranslationBtn;
-        var sdkStartRecognizeOnceAsyncBtn, sdkStopRecognizeOnceAsyncBtn, languageTargetOptions, voiceOutput;
-        var sdkIntentStartRecognizeOnceAsyncBtn, sdkIntentStopRecognizeOnceAsyncBtn;
-        var audioFile, audioFileValid;
-        var microphoneId;
-
+        var sdkStartRecognizeOnceAsyncBtn, sdkStopRecognizeOnceAsyncBtn;
+        var micToggle;
         var soundContext = undefined;
         try {
             var AudioContext = window.AudioContext // our preferred impl
@@ -299,334 +355,24 @@
             window.console.log("no sound context found, no audio output. " + e);
         }
 
+        function toggleMic(turnOn){
+            var cls = turnOn ? 'mic-on' : 'mic-off';
+            for(var i=0; i < micToggle.length; i++){
+                if(micToggle[i].classList.contains(cls)){
+                    micToggle[i].classList.remove("hide");
+                }
+                else{
+                    micToggle[i].classList.add("hide");
+                }
+            }
+        }
+
         document.addEventListener("DOMContentLoaded", function () {
-            createBtn = document.getElementById("createBtn");
             sdkStartRecognizeOnceAsyncBtn = document.getElementById("speechsdkStartRecognizeOnceAsync");
             sdkStopRecognizeOnceAsyncBtn = document.getElementById("speechsdkStopRecognizeOnceAsync");
-            sdkStartContinousRecognitionBtn = document.getElementById("speechsdkStartContinuousRecognition");
-            sdkStopContinousRecognitionBtn = document.getElementById("speechsdkStopContinuousRecognition");
-            sdkStartContinousTranslationBtn = document.getElementById("speechsdkStartContinuousTranslation");
-            sdkStopContinousTranslationBtn = document.getElementById("speechsdkStopContinuousTranslation");
-            sdkIntentStartRecognizeOnceAsyncBtn = document.getElementById("speechsdkIntentStartRecognizeOnceAsync");
-            sdkIntentStopRecognizeOnceAsyncBtn = document.getElementById("speechsdkIntentStopRecognizeOnceAsync");
+            micToggle = document.getElementsByClassName('mic-toggle');
             phraseDiv = document.getElementById("phraseDiv");
             statusDiv = document.getElementById("statusDiv");
-            key = document.getElementById("key");
-            appId = document.getElementById("appId");
-            phrases = document.getElementById("phrases");
-            languageOptions = document.getElementById("languageOptions");
-            languageTargetOptions = document.getElementById("languageTargetOptions");
-            voiceOutput = document.getElementById("voiceOutput");
-            regionOptions = document.getElementById("regionOptions");
-            formatOptions = document.getElementById("formatOptions");
-            inputSource = document.getElementById("inputSource");
-            filePicker = document.getElementById('filePicker');
-            microphoneSource = document.getElementById("microphoneSource");
-
-            // Starts continuous speech recognition.
-            sdkStartContinousRecognitionBtn.addEventListener("click", function () {
-                phraseDiv.innerHTML = "";
-                statusDiv.innerHTML = "";
-                var lastRecognized = "";
-
-                // If an audio file was specified, use it. Else use the microphone.
-                // Depending on browser security settings, the user may be prompted to allow microphone use. Using continuous recognition allows multiple
-                // phrases to be recognized from a single use authorization.
-                var audioConfig;
-                if (audioFileValid) {
-                    audioConfig = SpeechSDK.AudioConfig.fromWavFileInput(audioFile);
-                } else if (undefined != microphoneSource.value) {
-                    console.info("Getting Microphone " + microphoneSource.value);
-                    audioConfig = SpeechSDK.AudioConfig.fromMicrophoneInput(microphoneSource.value);
-                } else {
-                    audioConfig = SpeechSDK.AudioConfig.fromDefaultMicrophoneInput();
-                }
-
-                var speechConfig;
-                if (authorizationToken) {
-                    speechConfig = SpeechSDK.SpeechConfig.fromAuthorizationToken(authorizationToken, regionOptions.value);
-                } else {
-                    if (key.value === "" || key.value === "YOUR_SPEECH_API_KEY") {
-                        alert("Please enter your Cognitive Services Speech subscription key!");
-                        return;
-                    }
-                    speechConfig = SpeechSDK.SpeechConfig.fromSubscription(key.value, regionOptions.value);
-                }
-
-                speechConfig.speechRecognitionLanguage = languageOptions.value;
-                reco = new SpeechSDK.SpeechRecognizer(speechConfig, audioConfig);
-
-                // Before beginning speech recognition, setup the callbacks to be invoked when an event occurs.
-                // If Phrases are specified, include them.
-                if (phrases !== "") {
-                    var phraseListGrammar = SpeechSDK.PhraseListGrammar.fromRecognizer(reco);
-                    phraseListGrammar.addPhrase(phrases.value.split(";"));
-                }
-
-                // The event recognizing signals that an intermediate recognition result is received.
-                // You will receive one or more recognizing events as a speech phrase is recognized, with each containing
-                // more recognized speech. The event will contain the text for the recognition since the last phrase was recognized.
-                reco.recognizing = function (s, e) {
-                    window.console.log(e);
-                    statusDiv.innerHTML += "(recognizing) Reason: " + SpeechSDK.ResultReason[e.result.reason] + " Text: " + e.result.text + "\r\n";
-                    phraseDiv.innerHTML = lastRecognized + e.result.text;
-                };
-
-                // The event recognized signals that a final recognition result is received.
-                // This is the final event that a phrase has been recognized.
-                // For continuous recognition, you will get one recognized event for each phrase recognized.
-                reco.recognized = function (s, e) {
-                    window.console.log(e);
-
-                    // Indicates that recognizable speech was not detected, and that recognition is done.
-                    if (e.result.reason === SpeechSDK.ResultReason.NoMatch) {
-                        var noMatchDetail = SpeechSDK.NoMatchDetails.fromResult(e.result);
-                        statusDiv.innerHTML += "(recognized)  Reason: " + SpeechSDK.ResultReason[e.result.reason] + " NoMatchReason: " + SpeechSDK.NoMatchReason[noMatchDetail.reason] + "\r\n";
-                    } else {
-                        statusDiv.innerHTML += "(recognized)  Reason: " + SpeechSDK.ResultReason[e.result.reason] + " Text: " + e.result.text + "\r\n";
-                    }
-
-                    lastRecognized += e.result.text + "\r\n";
-                    phraseDiv.innerHTML = lastRecognized;
-                };
-
-                // The event signals that the service has stopped processing speech.
-                // https://docs.microsoft.com/javascript/api/microsoft-cognitiveservices-speech-sdk/speechrecognitioncanceledeventargs?view=azure-node-latest
-                // This can happen for two broad classes of reasons.
-                // 1. An error is encountered.
-                //    In this case the .errorDetails property will contain a textual representation of the error.
-                // 2. No additional audio is available.
-                //    Caused by the input stream being closed or reaching the end of an audio file.
-                reco.canceled = function (s, e) {
-                    window.console.log(e);
-
-                    statusDiv.innerHTML += "(cancel) Reason: " + SpeechSDK.CancellationReason[e.reason];
-                    if (e.reason === SpeechSDK.CancellationReason.Error) {
-                        statusDiv.innerHTML += ": " + e.errorDetails;
-                    }
-                    statusDiv.innerHTML += "\r\n";
-                };
-
-                // Signals that a new session has started with the speech service
-                reco.sessionStarted = function (s, e) {
-                    window.console.log(e);
-                    statusDiv.innerHTML += "(sessionStarted) SessionId: " + e.sessionId + "\r\n";
-                };
-
-                // Signals the end of a session with the speech service.
-                reco.sessionStopped = function (s, e) {
-                    window.console.log(e);
-                    statusDiv.innerHTML += "(sessionStopped) SessionId: " + e.sessionId + "\r\n";
-                    sdkStartContinousRecognitionBtn.disabled = false;
-                    sdkStopContinousRecognitionBtn.disabled = true;
-                };
-
-                // Signals that the speech service has started to detect speech.
-                reco.speechStartDetected = function (s, e) {
-                    window.console.log(e);
-                    statusDiv.innerHTML += "(speechStartDetected) SessionId: " + e.sessionId + "\r\n";
-                };
-
-                // Signals that the speech service has detected that speech has stopped.
-                reco.speechEndDetected = function (s, e) {
-                    window.console.log(e);
-                    statusDiv.innerHTML += "(speechEndDetected) SessionId: " + e.sessionId + "\r\n";
-                };
-
-                // Starts recognition
-                reco.startContinuousRecognitionAsync();
-
-                sdkStartContinousRecognitionBtn.disabled = true;
-                sdkStopContinousRecognitionBtn.disabled = false;
-            });
-
-            // Stops recognition and disposes of resources.
-            sdkStopContinousRecognitionBtn.addEventListener("click", function () {
-                reco.stopContinuousRecognitionAsync(
-                    function () {
-                        reco.close();
-                        reco = undefined;
-                    },
-                    function (err) {
-                        reco.close();
-                        reco = undefined;
-                    });
-
-                sdkStartContinousRecognitionBtn.disabled = false;
-                sdkStopContinousRecognitionBtn.disabled = true;
-            });
-
-            // Starts continuous speech translation.
-            sdkStartContinousTranslationBtn.addEventListener("click", function () {
-                var lastRecognized = "";
-                phraseDiv.innerHTML = "";
-                statusDiv.innerHTML = "";
-
-                // If an audio file was specified, use it. Else use the microphone.
-                // Depending on browser security settings, the user may be prompted to allow microphone use. Using continuous recognition allows multiple
-                // phrases to be recognized from a single use authorization.
-                var audioConfig;
-                if (audioFileValid) {
-                    audioConfig = SpeechSDK.AudioConfig.fromWavFileInput(audioFile);
-                } else if (undefined != microphoneSource.value) {
-                    console.info("Getting Microphone " + microphoneSource.value);
-                    audioConfig = SpeechSDK.AudioConfig.fromMicrophoneInput(microphoneSource.value);
-                } else {
-                    audioConfig = SpeechSDK.AudioConfig.fromDefaultMicrophoneInput();
-                }
-
-                var speechConfig;
-                if (authorizationToken) {
-                    speechConfig = SpeechSDK.SpeechTranslationConfig.fromAuthorizationToken(authorizationToken, regionOptions.value);
-                } else {
-                    if (key.value === "" || key.value === "YOUR_SPEECH_API_KEY") {
-                        alert("Please enter your Cognitive Services Speech subscription key!");
-                        return;
-                    }
-                    speechConfig = SpeechSDK.SpeechTranslationConfig.fromSubscription(key.value, regionOptions.value);
-                }
-
-                // Set the source language.
-                speechConfig.speechRecognitionLanguage = languageOptions.value;
-
-                // Defines the language(s) that speech should be translated to.
-                // Multiple languages can be specified for text translation and will be returned in a map.
-                speechConfig.addTargetLanguage(languageTargetOptions.value.split("(")[1].substring(0, 5));
-
-                // If voice output is requested, set the target voice.
-                // If multiple text translations were requested, only the first one added will have audio synthesised for it.
-                if (voiceOutput.checked) {
-                    speechConfig.setProperty(SpeechSDK.PropertyId.SpeechServiceConnection_TranslationVoice, languageTargetOptions.value);
-                }
-
-                reco = new SpeechSDK.TranslationRecognizer(speechConfig, audioConfig);
-
-                // If Phrases are specified, include them.
-                if (phrases !== "") {
-                    var phraseListGrammar = SpeechSDK.PhraseListGrammar.fromRecognizer(reco);
-                    phraseListGrammar.addPhrase(phrases.value.split(";"));
-                }
-
-                // Before beginning speech recognition, setup the callbacks to be invoked when an event occurs.
-
-                // The event recognizing signals that an intermediate recognition result is received.
-                // You will receive one or more recognizing events as a speech phrase is recognized, with each containing
-                // more recognized speech. The event will contain the text for the recognition since the last phrase was recognized.
-                // Both the source language text and the translation text(s) are available.
-                reco.recognizing = function (s, e) {
-                    window.console.log(e);
-                    statusDiv.innerHTML += "(recognizing) Reason: " + SpeechSDK.ResultReason[e.result.reason] + " Text: " + e.result.text + " Translations:";
-
-                    var language = languageTargetOptions.value.split("(")[1].substring(0, 2);
-
-                    statusDiv.innerHTML += " [" + language + "] " + e.result.translations.get(language);
-                    statusDiv.innerHTML += "\r\n";
-
-                    phraseDiv.innerHTML = lastRecognized + e.result.translations.get(language);
-                };
-
-                // The event recognized signals that a final recognition result is received.
-                // This is the final event that a phrase has been recognized.
-                // For continuous recognition, you will get one recognized event for each phrase recognized.
-                // Both the source language text and the translation text(s) are available.
-                reco.recognized = function (s, e) {
-                    window.console.log(e);
-                    statusDiv.innerHTML += "(recognized)  Reason: " + SpeechSDK.ResultReason[e.result.reason] + " Text: " + e.result.text + " Translations:";
-
-                    var language = languageTargetOptions.value.split("(")[1].substring(0, 2);
-
-                    statusDiv.innerHTML += " [" + language + "] " + e.result.translations.get(language);
-                    statusDiv.innerHTML += "\r\n";
-
-                    lastRecognized += e.result.translations.get(language) + "\r\n";
-                    phraseDiv.innerHTML = lastRecognized;
-                };
-
-                // The event signals that the service has stopped processing speech.
-                // https://docs.microsoft.com/javascript/api/microsoft-cognitiveservices-speech-sdk/translationrecognitioncanceledeventargs?view=azure-node-latest
-                // This can happen for two broad classes of reasons.
-                // 1. An error is encountered.
-                //    In this case the .errorDetails property will contain a textual representation of the error.
-                // 2. No additional audio is available.
-                //    Caused by the input stream being closed or reaching the end of an audio file.
-                reco.canceled = function (s, e) {
-                    window.console.log(e);
-
-                    statusDiv.innerHTML += "(cancel) Reason: " + SpeechSDK.CancellationReason[e.reason] + "\r\n";
-                };
-
-                // Signals an audio payload of synthesized speech is ready for playback.
-                // If the event result contains valid audio, it's reason will be ResultReason.SynthesizingAudio
-                // Once a complete phrase has been synthesized, the event will be called with ResultReason.SynthesizingAudioComplete and a 0 byte audio payload.
-                reco.synthesizing = function (s, e) {
-                    window.console.log(e);
-
-                    var audioSize = e.result.audio === undefined ? 0 : e.result.audio.byteLength;
-
-                    statusDiv.innerHTML += "(synthesizing) Reason: " + SpeechSDK.ResultReason[e.result.reason] + " " + audioSize + " bytes\r\n";
-
-                    if (e.result.audio && soundContext) {
-                        var source = soundContext.createBufferSource();
-                        soundContext.decodeAudioData(e.result.audio, function (newBuffer) {
-                            source.buffer = newBuffer;
-                            source.connect(soundContext.destination);
-                            source.start(0);
-                        });
-                    }
-                };
-
-                // Signals that a new session has started with the speech service
-                reco.sessionStarted = function (s, e) {
-                    window.console.log(e);
-                    statusDiv.innerHTML += "(sessionStarted) SessionId: " + e.sessionId + "\r\n";
-                };
-
-                // Signals the end of a session with the speech service.
-                reco.sessionStopped = function (s, e) {
-                    languageTargetOptions.disabled = false;
-                    sdkStartContinousTranslationBtn.disabled = false;
-                    sdkStopContinousTranslationBtn.disabled = true;
-
-                    window.console.log(e);
-                    statusDiv.innerHTML += "(sessionStopped) SessionId: " + e.sessionId + "\r\n";
-                    sdkStartContinousRecognitionBtn.disabled = false;
-                    sdkStopContinousRecognitionBtn.disabled = true;
-                };
-
-                // Signals that the speech service has started to detect speech.
-                reco.speechStartDetected = function (s, e) {
-                    window.console.log(e);
-                    statusDiv.innerHTML += "(speechStartDetected) SessionId: " + e.sessionId + "\r\n";
-                };
-
-                // Signals that the speech service has detected that speech has stopped.
-                reco.speechEndDetected = function (s, e) {
-                    window.console.log(e);
-                    statusDiv.innerHTML += "(speechEndDetected) SessionId: " + e.sessionId + "\r\n";
-                };
-
-                reco.startContinuousRecognitionAsync();
-
-                languageTargetOptions.disabled = true;
-                sdkStartContinousTranslationBtn.disabled = true;
-                sdkStopContinousTranslationBtn.disabled = false;
-            });
-
-            sdkStopContinousTranslationBtn.addEventListener("click", function () {
-                languageTargetOptions.disabled = false;
-                sdkStartContinousTranslationBtn.disabled = false;
-                sdkStopContinousTranslationBtn.disabled = true;
-
-                reco.stopContinuousRecognitionAsync(
-                    function () {
-                        reco.close();
-                        reco = undefined;
-                    },
-                    function (err) {
-                        reco.close();
-                        reco = undefined;
-                    });
-            });
 
             // Demonstrates recognizing a single spoken phrase.
             sdkStartRecognizeOnceAsyncBtn.addEventListener("click", function () {
@@ -637,33 +383,24 @@
                 // Depending on browser security settings, the user may be prompted to allow microphone use. Using continuous recognition allows multiple
                 // phrases to be recognized from a single use authorization.
                 var audioConfig;
-                if (audioFileValid) {
-                    audioConfig = SpeechSDK.AudioConfig.fromWavFileInput(audioFile);
-                } else if (undefined != microphoneSource.value) {
-                    console.info("Getting Microphone " + microphoneSource.value);
-                    audioConfig = SpeechSDK.AudioConfig.fromMicrophoneInput(microphoneSource.value);
-                } else {
-                    audioConfig = SpeechSDK.AudioConfig.fromDefaultMicrophoneInput();
-                }
+                audioConfig = SpeechSDK.AudioConfig.fromDefaultMicrophoneInput();
+                
 
                 var speechConfig;
                 if (authorizationToken) {
-                    speechConfig = SpeechSDK.SpeechConfig.fromAuthorizationToken(authorizationToken, regionOptions.value);
-                } else {
-                    if (key.value === "" || key.value === "YOUR_SPEECH_API_KEY") {
-                        alert("Please enter your Cognitive Services Speech subscription key!");
-                        return;
-                    }
-                    speechConfig = SpeechSDK.SpeechConfig.fromSubscription(key.value, regionOptions.value);
+                    speechConfig = SpeechSDK.SpeechConfig.fromAuthorizationToken(authorizationToken, tokenRegion);
+                }
+                else {
+                    speechConfig = SpeechSDK.SpeechConfig.fromSubscription(config.subscriptionKey, config.region);
                 }
 
-                speechConfig.speechRecognitionLanguage = languageOptions.value;
+                speechConfig.speechRecognitionLanguage = config.language;
                 reco = new SpeechSDK.SpeechRecognizer(speechConfig, audioConfig);
 
                 // If Phrase are specified, include them.
-                if (phrases !== "") {
+                if (false && config.phrases !== "") {
                     var phraseListGrammar = SpeechSDK.PhraseListGrammar.fromRecognizer(reco);
-                    phraseListGrammar.addPhrase(phrases.value.split(";"));
+                    phraseListGrammar.addPhrase(config.phrases.split(";"));
                 }
 
                 // Before beginning speech recognition, setup the callbacks to be invoked when an event occurs.
@@ -674,7 +411,7 @@
                 reco.recognizing = function (s, e) {
                     window.console.log(e);
                     statusDiv.innerHTML += "(recognizing) Reason: " + SpeechSDK.ResultReason[e.result.reason] + " Text: " + e.result.text + "\r\n";
-                    phraseDiv.innerHTML = e.result.text;
+                    phraseDiv.innerHTML = mapper.transform(e.result.text);
                 };
 
                 // The event signals that the service has stopped processing speech.
@@ -764,9 +501,11 @@
                         }
                         statusDiv.innerHTML += "\r\n";
 
-                        phraseDiv.innerHTML = result.text + "\r\n";
+                        phraseDiv.innerHTML = mapper.transform(result.text) + "\r\n";
 
                         sdkStopRecognizeOnceAsyncBtn.click();
+
+                        //ToDo call api with result.text if result.reason is 3 query
                     },
                     function (err) {
                         window.console.log(err);
@@ -776,283 +515,22 @@
                         sdkStopRecognizeOnceAsyncBtn.click();
                     });
 
-                sdkStartRecognizeOnceAsyncBtn.disabled = true;
-                sdkStopRecognizeOnceAsyncBtn.disabled = false;
+                // sdkStartRecognizeOnceAsyncBtn.disabled = true;
+                // sdkStopRecognizeOnceAsyncBtn.disabled = false;
+                toggleMic(true);
             });
 
             sdkStopRecognizeOnceAsyncBtn.addEventListener("click", function () {
-                sdkStartRecognizeOnceAsyncBtn.disabled = false;
-                sdkStopRecognizeOnceAsyncBtn.disabled = true;
+                // sdkStartRecognizeOnceAsyncBtn.disabled = false;
+                // sdkStopRecognizeOnceAsyncBtn.disabled = true;
+                toggleMic(false);
 
                 reco.close();
                 reco = undefined;
             });
-
-            // Demonstrates recognizing a single spoken phrase.
-            sdkIntentStartRecognizeOnceAsyncBtn.addEventListener("click", function () {
-                phraseDiv.innerHTML = "";
-                statusDiv.innerHTML = "";
-
-                // If an audio file was specified, use it. Else use the microphone.
-                // Depending on browser security settings, the user may be prompted to allow microphone use. Using continuous recognition allows multiple
-                // phrases to be recognized from a single use authorization.
-                var audioConfig;
-                if (audioFileValid) {
-                    audioConfig = SpeechSDK.AudioConfig.fromWavFileInput(audioFile);
-                } else if (undefined != microphoneSource.value) {
-                    console.info("Getting Microphone " + microphoneSource.value);
-                    audioConfig = SpeechSDK.AudioConfig.fromMicrophoneInput(microphoneSource.value);
-                } else {
-                    audioConfig = SpeechSDK.AudioConfig.fromDefaultMicrophoneInput();
-                }
-
-                var speechConfig;
-                if (authorizationToken) {
-                    speechConfig = SpeechSDK.SpeechConfig.fromAuthorizationToken(authorizationToken, regionOptions.value);
-                } else {
-                    if (key.value === "" || key.value === "YOUR_SPEECH_API_KEY") {
-                        alert("Please enter your Cognitive Services Speech subscription key!");
-                        return;
-                    }
-                    speechConfig = SpeechSDK.SpeechConfig.fromSubscription(key.value, regionOptions.value);
-                }
-
-                speechConfig.speechRecognitionLanguage = languageOptions.value;
-                reco = new SpeechSDK.IntentRecognizer(speechConfig, audioConfig);
-
-                // Set up a Language Understanding Model from Language Understanding Intelligent Service (LUIS).
-                // See https://www.luis.ai/home for more information on LUIS.
-                if (appId.value !== "" && appId.value !== "YOUR_LANGUAGE_UNDERSTANDING_APP_ID") {
-                    var lm = SpeechSDK.LanguageUnderstandingModel.fromAppId(appId.value);
-
-                    reco.addAllIntents(lm);
-                }
-
-                // If Phrases are specified, include them.
-                if (phrases !== "") {
-                    var phraseListGrammar = SpeechSDK.PhraseListGrammar.fromRecognizer(reco);
-                    phraseListGrammar.addPhrase(phrases.value.split(";"));
-                }
-
-                // Before beginning speech recognition, setup the callbacks to be invoked when an event occurs.
-
-                // The event recognizing signals that an intermediate recognition result is received.
-                // You will receive one or more recognizing events as a speech phrase is recognized, with each containing
-                // more recognized speech. The event will contain the text for the recognition since the last phrase was recognized.
-                reco.recognizing = function (s, e) {
-                    window.console.log(e);
-                    statusDiv.innerHTML += "(recognizing) Reason: " + SpeechSDK.ResultReason[e.result.reason] + " Text: " + e.result.text + "\r\n";
-                    phraseDiv.innerHTML = e.result.text;
-                };
-
-                // The event signals that the service has stopped processing speech.
-                // https://docs.microsoft.com/javascript/api/microsoft-cognitiveservices-speech-sdk/speechrecognitioncanceledeventargs?view=azure-node-latest
-                // This can happen for two broad classes or reasons.
-                // 1. An error is encountered.
-                //    In this case the .errorDetails property will contain a textual representation of the error.
-                // 2. No additional audio is available.
-                //    Caused by the input stream being closed or reaching the end of an audio file.
-                reco.canceled = function (s, e) {
-                    window.console.log(e);
-
-                    statusDiv.innerHTML += "(cancel) Reason: " + SpeechSDK.CancellationReason[e.reason];
-                    if (e.reason === SpeechSDK.CancellationReason.Error) {
-                        statusDiv.innerHTML += ": " + e.errorDetails;
-                    }
-                    statusDiv.innerHTML += "\r\n";
-                };
-
-                // The event recognized signals that a final recognition result is received.
-                // This is the final event that a phrase has been recognized.
-                // For continuous recognition, you will get one recognized event for each phrase recognized.
-                reco.recognized = function (s, e) {
-                    window.console.log(e);
-
-                    statusDiv.innerHTML += "(recognized)  Reason: " + SpeechSDK.ResultReason[e.result.reason];
-
-                    // Depending on what result reason is returned, different properties will be populated.
-                    switch (e.result.reason) {
-                        // This case occurs when speech was successfully recognized, but the speech did not match an intent from the Language Understanding Model.
-                        case SpeechSDK.ResultReason.RecognizedSpeech:
-                            statusDiv.innerHTML += " Text: " + e.result.text;
-                            break;
-
-                        // Both speech an intent from the model was recognized.
-                        case SpeechSDK.ResultReason.RecognizedIntent:
-                            statusDiv.innerHTML += " Text: " + e.result.text + " IntentId: " + e.result.intentId;
-
-                            // The actual JSON returned from Language Understanding is a bit more complex to get to, but it is available for things like
-                            // the entity name and type if part of the intent.
-                            statusDiv.innerHTML += " Intent JSON: " + e.result.properties.getProperty(SpeechSDK.PropertyId.LanguageUnderstandingServiceResponse_JsonResult);
-                            break;
-
-                        // No match was found.
-                        case SpeechSDK.ResultReason.NoMatch:
-                            var noMatchDetail = SpeechSDK.NoMatchDetails.fromResult(e.result);
-                            statusDiv.innerHTML += " NoMatchReason: " + SpeechSDK.NoMatchReason[noMatchDetail.reason];
-                            break;
-                    }
-                    statusDiv.innerHTML += "\r\n";
-                };
-
-                // Signals that a new session has started with the speech service
-                reco.sessionStarted = function (s, e) {
-                    window.console.log(e);
-                    statusDiv.innerHTML += "(sessionStarted) SessionId: " + e.sessionId + "\r\n";
-                };
-
-                // Signals the end of a session with the speech service.
-                reco.sessionStopped = function (s, e) {
-                    window.console.log(e);
-                    statusDiv.innerHTML += "(sessionStopped) SessionId: " + e.sessionId + "\r\n";
-                    sdkStartContinousRecognitionBtn.disabled = false;
-                    sdkStopContinousRecognitionBtn.disabled = true;
-                };
-
-                // Signals that the speech service has started to detect speech.
-                reco.speechStartDetected = function (s, e) {
-                    window.console.log(e);
-                    statusDiv.innerHTML += "(speechStartDetected) SessionId: " + e.sessionId + "\r\n";
-                };
-
-                // Signals that the speech service has detected that speech has stopped.
-                reco.speechEndDetected = function (s, e) {
-                    window.console.log(e);
-                    statusDiv.innerHTML += "(speechEndDetected) SessionId: " + e.sessionId + "\r\n";
-                };
-
-                // Note: this is how you can process the result directly
-                //       rather then subscribing to the recognized
-                //       event
-                // The continuation below shows how to get the same data from the final result as you'd get from the
-                // events above.
-                reco.recognizeOnceAsync(
-                    function (result) {
-                        window.console.log(result);
-
-                        phraseDiv.innerHTML = result.text + "\r\n";
-
-                        statusDiv.innerHTML += "(continuation) Reason: " + SpeechSDK.ResultReason[result.reason];
-                        switch (result.reason) {
-                            case SpeechSDK.ResultReason.RecognizedSpeech:
-                                statusDiv.innerHTML += " Text: " + result.text;
-                                break;
-                            case SpeechSDK.ResultReason.RecognizedIntent:
-                                statusDiv.innerHTML += " Text: " + result.text + " IntentId: " + result.intentId;
-
-                                // The actual JSON returned from Language Understanding is a bit more complex to get to, but it is available for things like
-                                // the entity name and type if part of the intent.
-                                statusDiv.innerHTML += " Intent JSON: " + result.properties.getProperty(SpeechSDK.PropertyId.LanguageUnderstandingServiceResponse_JsonResult);
-                                phraseDiv.innerHTML += result.properties.getProperty(SpeechSDK.PropertyId.LanguageUnderstandingServiceResponse_JsonResult) + "\r\n";
-                                break;
-                            case SpeechSDK.ResultReason.NoMatch:
-                                var noMatchDetail = SpeechSDK.NoMatchDetails.fromResult(result);
-                                statusDiv.innerHTML += " NoMatchReason: " + SpeechSDK.NoMatchReason[noMatchDetail.reason];
-                                break;
-                            case SpeechSDK.ResultReason.Canceled:
-                                var cancelDetails = SpeechSDK.CancellationDetails.fromResult(result);
-                                statusDiv.innerHTML += " CancellationReason: " + SpeechSDK.CancellationReason[cancelDetails.reason];
-
-                                if (cancelDetails.reason === SpeechSDK.CancellationReason.Error) {
-                                    statusDiv.innerHTML += ": " + cancelDetails.errorDetails;
-                                }
-                                break;
-                        }
-                        statusDiv.innerHTML += "\r\n";
-
-                        sdkStopRecognizeOnceAsyncBtn.click();
-                    },
-                    function (err) {
-                        window.console.log(err);
-
-                        phraseDiv.innerHTML += "ERROR: " + err;
-
-                        sdkStopRecognizeOnceAsyncBtn.click();
-                    });
-
-                sdkStartRecognizeOnceAsyncBtn.disabled = true;
-                sdkStopRecognizeOnceAsyncBtn.disabled = false;
-            });
-
-            sdkIntentStopRecognizeOnceAsyncBtn.addEventListener("click", function () {
-                sdkStartRecognizeOnceAsyncBtn.disabled = false;
-                sdkStopRecognizeOnceAsyncBtn.disabled = true;
-
-                reco.close();
-                reco = undefined;
-            });
-
-            key.addEventListener("focus", function () {
-                if (key.value === "YOUR_SPEECH_API_KEY") {
-                    key.value = "";
-                }
-            });
-
-            key.addEventListener("focusout", function () {
-                if (key.value === "") {
-                    key.value = "YOUR_SPEECH_API_KEY";
-                }
-            });
-
-            appId.addEventListener("focus", function () {
-                if (key.value === "YOUR_LANGUAGE_UNDERSTANDING_APP_ID") {
-                    key.value = "";
-                }
-            });
-
-            appId.addEventListener("focusout", function () {
-                if (key.value === "") {
-                    key.value = "YOUR_LANGUAGE_UNDERSTANDING_APP_ID";
-                }
-            });
-
-            inputSource.addEventListener("change", function () {
-                audioFileValid = inputSource.value === "File";
-
-                if (inputSource.value === "File") {
-                    microphoneSource.disabled = true;
-                    filePicker.click();
-                    return;
-                } else {
-                    microphoneSource.disabled = false;
-
-                }
-            });
-
-            filePicker.addEventListener("change", function () {
-                audioFile = filePicker.files[0];
-            });
-
-            if (navigator && navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
-
-                // Enumerate the media devices.
-                navigator.mediaDevices.enumerateDevices().then((devices) => {
-                    var opt = document.createElement('option');
-                    opt.appendChild(document.createTextNode(""));
-                    opt.value = undefined;
-                    microphoneSource.appendChild(opt);
-
-                    for (const device of devices) {
-                        if (device.kind === "audioinput") {
-                            microphoneSource.style = "";
-                            // create new option element
-                            var opt = document.createElement('option');
-
-                            // create text node to add to option element (opt)
-                            opt.appendChild(document.createTextNode(device.label));
-
-                            // set value property of opt
-                            opt.value = device.deviceId;
-
-                            microphoneSource.appendChild(opt);
-                        }
-                    }
-                });
-            }
 
             Initialize(function (speechSdk) {
                 SpeechSDK = speechSdk;
-                sdkStartContinousRecognitionBtn.disabled = false;
                 sdkStartRecognizeOnceAsyncBtn.disabled = false;
 
                 // in case we have a function for getting an authorization token, call it.
