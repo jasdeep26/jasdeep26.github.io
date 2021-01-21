@@ -182,7 +182,7 @@
                 //     "title",
                 //     "author.firstName" 
                 // ],
-                fuseThreshold: 0.11,
+                fuseThreshold: 0.15,
                 matchLengthThreshold: 0.5
                 };
             
@@ -284,14 +284,15 @@
                 'Trafa': 'TRF',
                 'ZARA STUDIO CABALLERO': 'ZARA STUDIO CRO',
                 'cd dos': 'CD2',
+                'juke': 'UK',
+                'rankin': 'RANKING'
 
             },
             // Auto refresh token every 9 minutes as token validity is 10 minutes
             // Alternate approach: On demand refresh
             tokenRefreshTime: 9*60*1000,
             // todo delete
-            // subscriptionKey: 'c1da21d71a7b4bc9818068378b73ece0',
-            subscriptionKey: 'c1da21d71a7b4bc9818068378b73ece0',
+            // subscriptionKey: '',
 
             region: 'eastus',
             endpointId: '8b64ac84-90db-4a8d-9b98-e9226c647d92'
@@ -400,6 +401,7 @@
                 var speechConfig;
                 if (authorizationToken) {
                     speechConfig = SpeechSDK.SpeechConfig.fromAuthorizationToken(authorizationToken, tokenRegion);
+                    speechConfig.endpointId = config.endpointId;
                 }
                 else {
                     speechConfig = SpeechSDK.SpeechConfig.fromSubscription(config.subscriptionKey, config.region);
@@ -547,7 +549,7 @@
 
                 // in case we have a function for getting an authorization token, call it.
                 if (typeof RequestAuthorizationToken === "function") {
-                    // RequestAuthorizationToken();
+                    RequestAuthorizationToken();
                 }
             });
         });
