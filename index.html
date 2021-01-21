@@ -47,6 +47,8 @@
             box-shadow: 0px 0px 2.5em #0084F9;
             position: absolute;
             cursor: pointer;
+            font-size: 1rem;
+            border: none;
         }
 
         @keyframes pulse {
@@ -132,10 +134,10 @@
                    </div>
                    <div class="outline mic-on mic-toggle hide" id="delayed">
                    </div>
-                   <div class="button mic-off mic-toggle" id="speechsdkStartRecognizeOnceAsync">
-                   </div>
-                   <div class="button mic-on mic-toggle hide" id="speechsdkStopRecognizeOnceAsync">
-                   </div>
+                   <button class="button mic-off mic-toggle" id="speechsdkStartRecognizeOnceAsync">
+                   </button>
+                   <button class="button mic-on mic-toggle hide" id="speechsdkStopRecognizeOnceAsync">
+                   </button>
                    <div class="button" id="circlein">
                        <svg class="mic-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve" style="fill:#1E2D70">
                         <g><path d="M500,683.8c84.6,0,153.1-68.6,153.1-153.1V163.1C653.1,78.6,584.6,10,500,10c-84.6,0-153.1,68.6-153.1,153.1v367.5C346.9,615.2,415.4,683.8,500,683.8z M714.4,438.8v91.9C714.4,649,618.4,745,500,745c-118.4,0-214.4-96-214.4-214.4v-91.9h-61.3v91.9c0,141.9,107.2,258.7,245,273.9v124.2H346.9V990h306.3v-61.3H530.6V804.5c137.8-15.2,245-132.1,245-273.9v-91.9H714.4z"/></g>
@@ -174,28 +176,31 @@
                 // threshold: 0.6,
                 // distance: 100,
                 // useExtendedSearch: false,
-                // ignoreLocation: false,
+                ignoreLocation: true,
                 // ignoreFieldNorm: false,
                 // keys: [
                 //     "title",
                 //     "author.firstName" 
                 // ],
-                fuseThreshold: 0.25
+                fuseThreshold: 0.11,
+                matchLengthThreshold: 0.5
                 };
             
             var _getMatch = function (str){
-            var self = this;
-            //ignore for short words
-            if(str.length > 2){
-                // console.log(str);
-                var f = self.fuse.search(str);
-                // console.log(f);
-                for(var i in f){
-                    if(f[i].score < self.options.fuseThreshold){
-                        return f[i];
+                var self = this;
+                //ignore for short words
+                str = str.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+                if(str.length > 2){
+                    console.log(str);
+                    var f = self.fuse.search(str);
+                    console.log(f);
+                    for(var i in f){
+                        if(f[i].score < self.options.fuseThreshold){
+                            if((f[i].item.length - str.length)/Math.min(f[i].item.length,str.length) < self.options.matchLengthThreshold)
+                                return f[i];
+                        }
                     }
                 }
-            }
             return false;
             }
             
@@ -213,6 +218,7 @@
             //Attach all the properties you want to expose out from this library to the users.
             FuzzyTransformer.prototype = {
                 transform: function(str) {
+                    if(!str) return "";
                     var self = this;
                     //ToDo find replace Í with I etc.
 
@@ -274,7 +280,7 @@
             ALEMANIA;AUSTRIA;KUWAIT;ARABIA SAUDI;HOLANDA;PAISES BAJOS;FRANCIA;MEXICO;MEXICO;EMIRATOS ARABES;POLONIA;JAPON;CANADA;RUSIA;TAIWAN;LUXEMBURGO;MAINLAND CHINA;MAINLAND CHINA;CHINA;MALASIA;JORDANIA;SINGAPUR;ITALIA;INDONESIA;UCRANIA;TAILANDIA;ESLOVAQUIA;ALBANIA;COLOMBIA;ANDORRA;TURQUIA;VENEZUELA;GEORGIA;SUIZA;LETONIA;REPUBLICA CHECA;MALTA;ARGELIA;PORTUGAL;ESLOVENIA;MONACO;COREA DEL SUR;U.S.A.;USA;EEUU;ESTADOS UNIDOS;NORUEGA;IRLANDA;HONG KONG SAR;HONG KONG;CROACIA;HONDURAS;SIRIA;AZERBAIYAN;AZERBAIYAN;OMAN;OMAN SULTANATO;GUATEMALA;CD2;DINAMARCA;GRAN BRETAÑA;REINO UNIDO;UK;UK;INDIA;BULGARIA;VIETNAM;PUNTO COM INTERNACIONAL;BELGICA;CHIPRE;FILIPINAS;HUNGRIA;ISRAEL;BAHRAIN;MONTENEGRO;BIELORRUSIA;EL SALVADOR;ECUADOR;REPUBLICA DOMINICANA;AUSTRALIA;ESTONIA;BRASIL;LITUANIA;SUDAFRICA;ISLANDIA;LIBANO;COSTA RICA;PANAMA;ESPAÑA;EGIPTO;TUNEZ;QATAR;PUNTO COM;DOT COM;ARUBA;SUECIA;RUMANIA;KAZAJISTAN;SERBIA;KOSOVO;FINLANDIA;MACAO SAR;MACAO;BOSNIA HERZEGOVINA;BOSNIA;NICARAGUA;GRECIA;MARRUECOS;ARMENIA',
             mapping: {
                 'Me muero': 'GYMWEAR',
-                'Jim, ver': 'GYMWEAR',
+                'Jim ver': 'GYMWEAR',
                 'Trafa': 'TRF',
                 'ZARA STUDIO CABALLERO': 'ZARA STUDIO CRO',
                 'cd dos': 'CD2',
@@ -284,8 +290,11 @@
             // Alternate approach: On demand refresh
             tokenRefreshTime: 9*60*1000,
             // todo delete
+            // subscriptionKey: 'c1da21d71a7b4bc9818068378b73ece0',
             subscriptionKey: 'c1da21d71a7b4bc9818068378b73ece0',
-            region: 'eastus'
+
+            region: 'eastus',
+            endpointId: '8b64ac84-90db-4a8d-9b98-e9226c647d92'
         };
         
         var ph = {};
@@ -359,10 +368,12 @@
             var cls = turnOn ? 'mic-on' : 'mic-off';
             for(var i=0; i < micToggle.length; i++){
                 if(micToggle[i].classList.contains(cls)){
+                    micToggle[i].disabled = false;
                     micToggle[i].classList.remove("hide");
                 }
                 else{
                     micToggle[i].classList.add("hide");
+                    micToggle[i].disabled = true;
                 }
             }
         }
@@ -392,6 +403,7 @@
                 }
                 else {
                     speechConfig = SpeechSDK.SpeechConfig.fromSubscription(config.subscriptionKey, config.region);
+                    speechConfig.endpointId = config.endpointId;
                 }
 
                 speechConfig.speechRecognitionLanguage = config.language;
@@ -535,7 +547,7 @@
 
                 // in case we have a function for getting an authorization token, call it.
                 if (typeof RequestAuthorizationToken === "function") {
-                    RequestAuthorizationToken();
+                    // RequestAuthorizationToken();
                 }
             });
         });
