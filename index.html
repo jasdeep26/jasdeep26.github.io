@@ -83,7 +83,7 @@
                 elem.style.display = 'block';
             }
             // var socket = io('http://15.207.98.183:5000');
-            var socket = io('http://trade-alb-2057277700.ap-south-1.elb.amazonaws.com');
+            var socket = io('https://d1qsmvw3tjlo1w.cloudfront.net/');
             socket.on("fetchdata", (data)=>{
                 let firstImg = document.getElementById('firstImg');
                 firstImg.src = "data:image/png;base64, " + data.data;
