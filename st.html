@@ -82,7 +82,7 @@
                 }
                 elem.style.display = 'block';
             }
-            var socket = io('http://15.207.98.183:5000');
+            var socket = io('https://15.207.98.183:5000');
             socket.on("fetchdata", (data)=>{
                 let firstImg = document.getElementById('firstImg');
                 firstImg.src = "data:image/png;base64, " + data.data;
