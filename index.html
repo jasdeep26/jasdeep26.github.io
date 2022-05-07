@@ -1,559 +1,93 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-    <title>Speech Sample</title>
-    <meta charset="utf-8" />
-    <style>
-        html{
-            font-size: 2vh;
-        }
-        body{
-            background-color: black;
-            color: grey;
-        }
-
-        .box {
-            font-size: 1rem;
-            position: absolute;
-            bottom: 5rem;
-            left: 50%;
-        }
-
-        .object {
-            display: flex;
-            flex: 0 1 100%;
-            justify-content: center;
-            align-items: center;
-            align-content: stretch;
-        }
-
-        .outline {
-            width: 2em;
-            height: 2em;
-            border-radius: 50%;
-            border: 0.25em solid #B5A4A4;
-            animation: pulse 3s;
-            animation-timing-function: ease-out;
-            animation-iteration-count: infinite;
-            position: absolute;
-        }
-
-        .button {
-            width: 4em;
-            height: 4em;
-            border-radius: 50%;
-            background: #50CDDD;
-            box-shadow: 0px 0px 2.5em #0084F9;
-            position: absolute;
-            cursor: pointer;
-            font-size: 1rem;
-            border: none;
-        }
-
-        @keyframes pulse {
-            0% {
-                transform: scale(0);
-                opacity: 0;
-                border: 2em solid #0B3082;
+    <head>
+        <style>
+            .wrapper {
+                width: 100vw;
+                height: 100vh;
             }
-            50% {
-                border: solid #A3FFC2;		
-                opacity: 0.8;
+
+            .header {
+                width: 100%;
+                height: 80px;
+                background-color: #000;
             }
-            
-            90% {
-                transform: scale(3.2);
-                opacity: 0.2;
-                border: 3px solid #2E3CFF;
+
+            .section {
+                width: 100%;
+                height: calc(100% - 100px);
+                padding: 0 5rem;
             }
-            100% {
-                transform: scale(3.3);
-                opacity: 0;
-                border: 1px solid #7A89FF;
+
+            .tabs {
+                width: 100%;
+                height: auto;
+                overflow: auto;
             }
-        }
 
-        #delayed {
-            animation-delay: 1.5s;
-        }
+            ul {
+                list-style: none;
+                display: inline-flex;
+                border-bottom: 1px solid #ccc;
+                width: 100%;
+                padding-left: 0;
+            }
 
-        #circlein {
-            width: 3.3em;
-            height: 3.3em;
-            border-radius: 50%;
-            background: #6BD6E1;
-            box-shadow: 0px -2px 0.5em #E0FF94;
-            position: absolute;
-            pointer-events: none;
-        }
+            li {
+                padding: 1rem;
+                border: 1px solid #ccc;
+                cursor: pointer;
+            }
 
-        .mic-icon {
-            height: 2em;
-            position: absolute;
-            margin: 0.7em;
-        }
-
-        .hide{
-            display: none;
-        }
-
-        .microphone .mic-off{
-            box-shadow: none;
-        }
-
-        .output{
-            text-align: center;
-            margin: 4rem auto;
-            position: absolute;
-            bottom: 6rem;
-            width: 80%;
-            left: 10%;
-            color: grey;
-            font-size: 3rem;
-        }
-
-        .status{
-            /* display: none; */
-            background: inherit;
-            color: inherit;
-            height: 35vh;
-            width: 100%;
-
-        }
-    </style>
-</head>
-
-<body style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
-    <div id="content" style="display:none">
-        <div id="phraseDiv" class="output"></div>
-        <textarea id="statusDiv" class="status"></textarea>
-        <div class="box microphone">
-            <div class="object">
-                   <div class="outline mic-on mic-toggle hide">
-                   </div>
-                   <div class="outline mic-on mic-toggle hide" id="delayed">
-                   </div>
-                   <button class="button mic-off mic-toggle" id="speechsdkStartRecognizeOnceAsync">
-                   </button>
-                   <button class="button mic-on mic-toggle hide" id="speechsdkStopRecognizeOnceAsync">
-                   </button>
-                   <div class="button" id="circlein">
-                       <svg class="mic-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve" style="fill:#1E2D70">
-                        <g><path d="M500,683.8c84.6,0,153.1-68.6,153.1-153.1V163.1C653.1,78.6,584.6,10,500,10c-84.6,0-153.1,68.6-153.1,153.1v367.5C346.9,615.2,415.4,683.8,500,683.8z M714.4,438.8v91.9C714.4,649,618.4,745,500,745c-118.4,0-214.4-96-214.4-214.4v-91.9h-61.3v91.9c0,141.9,107.2,258.7,245,273.9v124.2H346.9V990h306.3v-61.3H530.6V804.5c137.8-15.2,245-132.1,245-273.9v-91.9H714.4z"/></g>
-                        </svg>
-                   </div>
+            .activ {
+                background-color: #ccc;
+            }
+        </style>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.1/socket.io.js" integrity="sha512-AcZyhRP/tbAEsXCCGlziPun5iFvcSUpEz2jKkx0blkYKbxU81F+iq8FURwPn1sYFeksJ+sDDrI5XujsqSobWdQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    </head>
+    <body>
+        <div class="wrapper">
+            <div class="header"></div>
+            <div class="section">
+                <div class="tabs">
+                    <ul>
+                        <li class="tab1" onclick="setTabSeq('tab1', 0)">Tab 1</li>
+                        <li class="tab2" onclick="setTabSeq('tab2', 1)">Tab 2</li>
+                        <li class="tab3" onclick="setTabSeq('tab3', 2)">Tab 3</li>
+                        <li class="tab4" onclick="setTabSeq('tab4', 3)">Tab 4</li>
+                    </ul>
+                </div>
+                <div className="tab-section">
+                    <div class="tabopt" id="tab1">
+                        <img id="firstImg" src="" alt="tab1" />
+                    </div>
+                    <div class="tabopt" id="tab2" style="display: none;">
+                        <img src="" alt="tab2" />
+                    </div>
+                    <div class="tabopt" id="tab3" style="display: none;">
+                        <img src="" alt="tab3" />
+                    </div>
+                    <div class="tabopt" id="tab4" style="display: none;">
+                        <img src="" alt="tab4" />
+                    </div>
+                </div>
             </div>
-       </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.js"></script>
-
-    <!-- Speech SDK REFERENCE -->
-    <script src="microsoft.cognitiveservices.speech.sdk.bundle.js"></script>
-
-    <script>
-        (function(global) {
-            if(!global) {
-                throw "Global Window object is not available.";
-            }
-            if(!Fuse) {
-                throw "Fuse object is not available.";
-            }
-            
-            var FuzzyTransformer = function(list, options) {
-                return new FuzzyTransformer.init(list, options);
-            }
-            
-            var fuseOptions = {
-                // isCaseSensitive: false,
-                includeScore: true,
-                // shouldSort: true,
-                includeMatches: true,
-                // findAllMatches: false,
-                // minMatchCharLength: 1,
-                // location: 0,
-                // threshold: 0.6,
-                // distance: 100,
-                // useExtendedSearch: false,
-                ignoreLocation: true,
-                // ignoreFieldNorm: false,
-                // keys: [
-                //     "title",
-                //     "author.firstName" 
-                // ],
-                fuseThreshold: 0.15,
-                matchLengthThreshold: 0.5
-                };
-            
-            var _getMatch = function (str){
-                var self = this;
-                //ignore for short words
-                str = str.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
-                if(str.length > 2){
-                    console.log(str);
-                    var f = self.fuse.search(str);
-                    console.log(f);
-                    for(var i in f){
-                        if(f[i].score < self.options.fuseThreshold){
-                            if((f[i].item.length - str.length)/Math.min(f[i].item.length,str.length) < self.options.matchLengthThreshold)
-                                return f[i];
-                        }
-                    }
+        </div>
+        <script>
+            function setTabSeq(tab, ind) {
+                var tabClass = document.getElementsByClassName('tabopt');
+                let elem = document.getElementById(tab);
+                for (x of tabClass) {
+                    x.style.display = 'none';
                 }
-            return false;
+                elem.style.display = 'block';
             }
-            
-            //Create a new init function constructor and return it when FuzzyTransformer method is called.
-            //It is also a pattern used in jQuery
-            FuzzyTransformer.init = function(mappings, options) {
-                var self = this;
-                self.mappings = mappings || {};
-                self.list = Object.keys(self.mappings) || [];
-                self.options =  {...fuseOptions, ...options};
-                self.fuse = new Fuse(self.list, self.options);
-                self._getMatch = _getMatch;
-            }
-            
-            //Attach all the properties you want to expose out from this library to the users.
-            FuzzyTransformer.prototype = {
-                transform: function(str) {
-                    if(!str) return "";
-                    var self = this;
-                    //ToDo find replace Í with I etc.
-
-                    var ss = str.split(' ');
-                    var ret = [...ss];
-
-                    for(let s=0; s < ss.length; s++){ 
-
-                        var match = self._getMatch(ss[s])
-                        if(match){
-                        // ToDo verify
-                        /* if(match.item.split(' ').length == 1) */
-                        ret[s] = fuseMap[match.item];
-
-                        }
-
-                        if(s < ss.length - 1){
-
-                        var s2 = ss[s] + ' ' + ss[s + 1];
-                        var match = self._getMatch(s2)
-                        if(match){
-                            if(ret[s] == ss[s]){
-                            ret[s] = fuseMap[match.item];
-                            ret[s + 1] = ""
-                            }
-                        }
-                        }
-                    }
-
-                    return ret.join(' ');
-
-                }
-            };
-            
-            //When var out = FT$(...); is used outside this library, out.prototype should be able to access all the properties of FuzzyTransformer.
-            //Therefore FuzzyTransformer.init() function constructor's prototype should point to FuzzyTransformer prototype.
-            FuzzyTransformer.init.prototype = FuzzyTransformer.prototype;
-            
-            //Creating alias so that user can call using FuzzyTransformer(...) or $FT(...)
-            global.FuzzyTransformer = global.$FT = FuzzyTransformer;
-        }(window));
-    </script>
-
-    <!-- Speech Speech SDK Authorization token -->
-    <script>
-        // Note: Replace the URL with a valid endpoint to retrieve
-        //       authorization tokens for your subscription.
-
-        // An authorization token is a more secure method to authenticate for a browser deployment as
-        // it allows the subscription keys to be kept secure on a server and a 10 minute use token to be
-        // handed out to clients from an endpoint that can be protected from unauthorized access.
-
-
-        var config = {
-            authorizationEndpoint: 'https://speechtest2.azurewebsites.net/',
-            language: 'es-ES',
-            // phrases:  ["WOMAN", "BASIC", "TRF", "COMPLEMENTOS", "PUNTO", "CIRCULAR", "LENCERIA", "ZARA STUDIO", "GYMWEAR", "UNIFORMES", "GENERICO REBAJAS"],
-            phrases: 'VESTIR;CIRCULAR;UNIFORMES;GENERICO REBAJAS;DENIM;SPORT;PUNTO;COMPLEMENTOS;ZARA STUDIO CRO;BYO;ACCESORIOS;GENERICO REBAJAS;ZARA STUDIO;NINA;NINO;PUNTO;BYA;MINI;WOMAN;TRF;PUNTO;UNIFORMES;GENERICO REBAJAS;CIRCULAR;GYMWEAR;BASIC;COMPLEMENTOS;ZARA STUDIO;LENCERIA;\
-            ALEMANIA;AUSTRIA;KUWAIT;ARABIA SAUDI;HOLANDA;PAISES BAJOS;FRANCIA;MEXICO;MEXICO;EMIRATOS ARABES;POLONIA;JAPON;CANADA;RUSIA;TAIWAN;LUXEMBURGO;MAINLAND CHINA;MAINLAND CHINA;CHINA;MALASIA;JORDANIA;SINGAPUR;ITALIA;INDONESIA;UCRANIA;TAILANDIA;ESLOVAQUIA;ALBANIA;COLOMBIA;ANDORRA;TURQUIA;VENEZUELA;GEORGIA;SUIZA;LETONIA;REPUBLICA CHECA;MALTA;ARGELIA;PORTUGAL;ESLOVENIA;MONACO;COREA DEL SUR;U.S.A.;USA;EEUU;ESTADOS UNIDOS;NORUEGA;IRLANDA;HONG KONG SAR;HONG KONG;CROACIA;HONDURAS;SIRIA;AZERBAIYAN;AZERBAIYAN;OMAN;OMAN SULTANATO;GUATEMALA;CD2;DINAMARCA;GRAN BRETAÑA;REINO UNIDO;UK;UK;INDIA;BULGARIA;VIETNAM;PUNTO COM INTERNACIONAL;BELGICA;CHIPRE;FILIPINAS;HUNGRIA;ISRAEL;BAHRAIN;MONTENEGRO;BIELORRUSIA;EL SALVADOR;ECUADOR;REPUBLICA DOMINICANA;AUSTRALIA;ESTONIA;BRASIL;LITUANIA;SUDAFRICA;ISLANDIA;LIBANO;COSTA RICA;PANAMA;ESPAÑA;EGIPTO;TUNEZ;QATAR;PUNTO COM;DOT COM;ARUBA;SUECIA;RUMANIA;KAZAJISTAN;SERBIA;KOSOVO;FINLANDIA;MACAO SAR;MACAO;BOSNIA HERZEGOVINA;BOSNIA;NICARAGUA;GRECIA;MARRUECOS;ARMENIA',
-            mapping: {
-                'Me muero': 'GYMWEAR',
-                'Jim ver': 'GYMWEAR',
-                'Trafa': 'TRF',
-                'ZARA STUDIO CABALLERO': 'ZARA STUDIO CRO',
-                'cd dos': 'CD2',
-                'juke': 'UK',
-                'rankin': 'RANKING'
-
-            },
-            // Auto refresh token every 9 minutes as token validity is 10 minutes
-            // Alternate approach: On demand refresh
-            tokenRefreshTime: 9*60*1000,
-            // todo delete
-            subscriptionKey: '',
-
-            region: 'eastus',
-            endpointId: '8b64ac84-90db-4a8d-9b98-e9226c647d92'
-        };
-        
-        var ph = {};
-        config.phrases.split(';').map((i)=> ph[i] = i);
-        var fuseMap = {...config.mapping, ...ph};
-
-        var mapper = FuzzyTransformer(fuseMap);
-
-        function RequestAuthorizationToken() {
-            if (config.authorizationEndpoint) {
-                var a = new XMLHttpRequest();
-                a.open("GET", config.authorizationEndpoint);
-                a.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                a.send("");
-                a.onload = function () {
-                    var token = JSON.parse(atob(this.responseText.split(".")[1]));
-                    tokenRegion = token.region;
-                    authorizationToken = this.responseText;
-                    // authorizationToken = 'eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJyZWdpb24iOiJlYXN0dXMiLCJzdWJzY3JpcHRpb24taWQiOiJkMzM2MDU3YWQxMDA0YTIyYjUyZDg2ZGUwOTQzMjZhYSIsInByb2R1Y3QtaWQiOiJTcGVlY2hTZXJ2aWNlcy5GMCIsImNvZ25pdGl2ZS1zZXJ2aWNlcy1lbmRwb2ludCI6Imh0dHBzOi8vYXBpLmNvZ25pdGl2ZS5taWNyb3NvZnQuY29tL2ludGVybmFsL3YxLjAvIiwiYXp1cmUtcmVzb3VyY2UtaWQiOiIvc3Vic2NyaXB0aW9ucy8zNjQ5NzA5MC1jMzE1LTRmNTAtODIwMS1kMWUyNWVjZDc3YTcvcmVzb3VyY2VHcm91cHMvSlNLLVJlY29nbml6ZVRleHQvcHJvdmlkZXJzL01pY3Jvc29mdC5Db2duaXRpdmVTZXJ2aWNlcy9hY2NvdW50cy9TcGVlY2gyIiwic2NvcGUiOiJzcGVlY2hzZXJ2aWNlcyIsImF1ZCI6InVybjptcy5zcGVlY2hzZXJ2aWNlcy5lYXN0dXMiLCJleHAiOjE2MDk5MTU2NTUsImlzcyI6InVybjptcy5jb2duaXRpdmVzZXJ2aWNlcyJ9.kitHykyVIjskkZnRX4weyHdY1iJpoXic8ntvwZmmx4A'
-                    console.log("Got an authorization token: ");
-                    console.log(token);
-
-                    // setTimeout(()=>{
-                    //     authorizationToken = '';
-                    //     RequestAuthorizationToken();
-                    // }, config.tokenRefreshTime)
-                }
-            }
-        }
-    </script>
-
-    <!-- Speech SDK USAGE -->
-    <script>
-        // On document load resolve the Speech SDK dependency
-        function Initialize(onComplete) {
-            if (!!window.SpeechSDK) {
-                document.getElementById('content').style.display = 'block';
-                // document.getElementById('warning').style.display = 'none';
-                onComplete(window.SpeechSDK);
-            }
-        }
-    </script>
-
-    <!-- Browser Hooks -->
-    <script>
-        
-        var phraseDiv, statusDiv;
-        var authorizationToken, tokenRegion;
-        var SpeechSDK;
-
-        var reco;
-        var sdkStartRecognizeOnceAsyncBtn, sdkStopRecognizeOnceAsyncBtn;
-        var micToggle;
-        var soundContext = undefined;
-        try {
-            var AudioContext = window.AudioContext // our preferred impl
-                || window.webkitAudioContext       // fallback, mostly when on Safari
-                || false;                          // could not find.
-
-            if (AudioContext) {
-                soundContext = new AudioContext();
-            } else {
-                alert("Audio context not supported");
-            }
-        }
-        catch (e) {
-            window.console.log("no sound context found, no audio output. " + e);
-        }
-
-        function toggleMic(turnOn){
-            var cls = turnOn ? 'mic-on' : 'mic-off';
-            for(var i=0; i < micToggle.length; i++){
-                if(micToggle[i].classList.contains(cls)){
-                    micToggle[i].disabled = false;
-                    micToggle[i].classList.remove("hide");
-                }
-                else{
-                    micToggle[i].classList.add("hide");
-                    micToggle[i].disabled = true;
-                }
-            }
-        }
-
-        document.addEventListener("DOMContentLoaded", function () {
-            sdkStartRecognizeOnceAsyncBtn = document.getElementById("speechsdkStartRecognizeOnceAsync");
-            sdkStopRecognizeOnceAsyncBtn = document.getElementById("speechsdkStopRecognizeOnceAsync");
-            micToggle = document.getElementsByClassName('mic-toggle');
-            phraseDiv = document.getElementById("phraseDiv");
-            statusDiv = document.getElementById("statusDiv");
-
-            // Demonstrates recognizing a single spoken phrase.
-            sdkStartRecognizeOnceAsyncBtn.addEventListener("click", function () {
-                phraseDiv.innerHTML = "";
-                statusDiv.innerHTML = "";
-
-                // If an audio file was specified, use it. Else use the microphone.
-                // Depending on browser security settings, the user may be prompted to allow microphone use. Using continuous recognition allows multiple
-                // phrases to be recognized from a single use authorization.
-                var audioConfig;
-                audioConfig = SpeechSDK.AudioConfig.fromDefaultMicrophoneInput();
-                
-
-                var speechConfig;
-                if (authorizationToken) {
-                    speechConfig = SpeechSDK.SpeechConfig.fromAuthorizationToken(authorizationToken, tokenRegion);
-                    speechConfig.endpointId = config.endpointId;
-                }
-                else {
-                    speechConfig = SpeechSDK.SpeechConfig.fromSubscription(config.subscriptionKey, config.region);
-                    speechConfig.endpointId = config.endpointId;
-                }
-
-                speechConfig.speechRecognitionLanguage = config.language;
-                reco = new SpeechSDK.SpeechRecognizer(speechConfig, audioConfig);
-
-                // If Phrase are specified, include them.
-                if (false && config.phrases !== "") {
-                    var phraseListGrammar = SpeechSDK.PhraseListGrammar.fromRecognizer(reco);
-                    phraseListGrammar.addPhrase(config.phrases.split(";"));
-                }
-
-                // Before beginning speech recognition, setup the callbacks to be invoked when an event occurs.
-
-                // The event recognizing signals that an intermediate recognition result is received.
-                // You will receive one or more recognizing events as a speech phrase is recognized, with each containing
-                // more recognized speech. The event will contain the text for the recognition since the last phrase was recognized.
-                reco.recognizing = function (s, e) {
-                    window.console.log(e);
-                    statusDiv.innerHTML += "(recognizing) Reason: " + SpeechSDK.ResultReason[e.result.reason] + " Text: " + e.result.text + "\r\n";
-                    phraseDiv.innerHTML = mapper.transform(e.result.text);
-                };
-
-                // The event signals that the service has stopped processing speech.
-                // https://docs.microsoft.com/javascript/api/microsoft-cognitiveservices-speech-sdk/speechrecognitioncanceledeventargs?view=azure-node-latest
-                // This can happen for two broad classes or reasons.
-                // 1. An error is encountered.
-                //    In this case the .errorDetails property will contain a textual representation of the error.
-                // 2. No additional audio is available.
-                //    Caused by the input stream being closed or reaching the end of an audio file.
-                reco.canceled = function (s, e) {
-                    window.console.log(e);
-
-                    statusDiv.innerHTML += "(cancel) Reason: " + SpeechSDK.CancellationReason[e.reason];
-                    if (e.reason === SpeechSDK.CancellationReason.Error) {
-                        statusDiv.innerHTML += ": " + e.errorDetails;
-                    }
-                    statusDiv.innerHTML += "\r\n";
-                };
-
-                // The event recognized signals that a final recognition result is received.
-                // This is the final event that a phrase has been recognized.
-                // For continuous recognition, you will get one recognized event for each phrase recognized.
-                reco.recognized = function (s, e) {
-                    window.console.log(e);
-
-                    // Indicates that recognizable speech was not detected, and that recognition is done.
-                    if (e.result.reason === SpeechSDK.ResultReason.NoMatch) {
-                        var noMatchDetail = SpeechSDK.NoMatchDetails.fromResult(e.result);
-                        statusDiv.innerHTML += "(recognized)  Reason: " + SpeechSDK.ResultReason[e.result.reason] + " NoMatchReason: " + SpeechSDK.NoMatchReason[noMatchDetail.reason] + "\r\n";
-                    } else {
-                        statusDiv.innerHTML += "(recognized)  Reason: " + SpeechSDK.ResultReason[e.result.reason] + " Text: " + e.result.text + "\r\n";
-                    }
-                };
-
-                // Signals that a new session has started with the speech service
-                reco.sessionStarted = function (s, e) {
-                    window.console.log(e);
-                    statusDiv.innerHTML += "(sessionStarted) SessionId: " + e.sessionId + "\r\n";
-                };
-
-                // Signals the end of a session with the speech service.
-                reco.sessionStopped = function (s, e) {
-                    window.console.log(e);
-                    statusDiv.innerHTML += "(sessionStopped) SessionId: " + e.sessionId + "\r\n";
-                    sdkStartContinousRecognitionBtn.disabled = false;
-                    sdkStopContinousRecognitionBtn.disabled = true;
-                };
-
-                // Signals that the speech service has started to detect speech.
-                reco.speechStartDetected = function (s, e) {
-                    window.console.log(e);
-                    statusDiv.innerHTML += "(speechStartDetected) SessionId: " + e.sessionId + "\r\n";
-                };
-
-                // Signals that the speech service has detected that speech has stopped.
-                reco.speechEndDetected = function (s, e) {
-                    window.console.log(e);
-                    statusDiv.innerHTML += "(speechEndDetected) SessionId: " + e.sessionId + "\r\n";
-                };
-
-                // Note: this is how you can process the result directly
-                //       rather then subscribing to the recognized
-                //       event
-                // The continuation below shows how to get the same data from the final result as you'd get from the
-                // events above.
-                reco.recognizeOnceAsync(
-                    function (result) {
-                        window.console.log(result);
-
-                        statusDiv.innerHTML += "(continuation) Reason: " + SpeechSDK.ResultReason[result.reason];
-                        switch (result.reason) {
-                            case SpeechSDK.ResultReason.RecognizedSpeech:
-                                statusDiv.innerHTML += " Text: " + result.text;
-                                break;
-                            case SpeechSDK.ResultReason.NoMatch:
-                                var noMatchDetail = SpeechSDK.NoMatchDetails.fromResult(result);
-                                statusDiv.innerHTML += " NoMatchReason: " + SpeechSDK.NoMatchReason[noMatchDetail.reason];
-                                break;
-                            case SpeechSDK.ResultReason.Canceled:
-                                var cancelDetails = SpeechSDK.CancellationDetails.fromResult(result);
-                                statusDiv.innerHTML += " CancellationReason: " + SpeechSDK.CancellationReason[cancelDetails.reason];
-
-                                if (cancelDetails.reason === SpeechSDK.CancellationReason.Error) {
-                                    statusDiv.innerHTML += ": " + cancelDetails.errorDetails;
-                                }
-                                break;
-                        }
-                        statusDiv.innerHTML += "\r\n";
-
-                        phraseDiv.innerHTML = mapper.transform(result.text) + "\r\n";
-
-                        sdkStopRecognizeOnceAsyncBtn.click();
-
-                        //ToDo call api with result.text if result.reason is 3 query
-                    },
-                    function (err) {
-                        window.console.log(err);
-
-                        phraseDiv.innerHTML += "ERROR: " + err;
-
-                        sdkStopRecognizeOnceAsyncBtn.click();
-                    });
-
-                // sdkStartRecognizeOnceAsyncBtn.disabled = true;
-                // sdkStopRecognizeOnceAsyncBtn.disabled = false;
-                toggleMic(true);
-            });
-
-            sdkStopRecognizeOnceAsyncBtn.addEventListener("click", function () {
-                // sdkStartRecognizeOnceAsyncBtn.disabled = false;
-                // sdkStopRecognizeOnceAsyncBtn.disabled = true;
-                toggleMic(false);
-
-                reco.close();
-                reco = undefined;
-            });
-
-            Initialize(function (speechSdk) {
-                SpeechSDK = speechSdk;
-                sdkStartRecognizeOnceAsyncBtn.disabled = false;
-
-                // in case we have a function for getting an authorization token, call it.
-                if (typeof RequestAuthorizationToken === "function") {
-                    RequestAuthorizationToken();
-                }
-            });
-        });
-    </script>
-</body>
-
+            // var socket = io('http://15.207.98.183:5000');
+            var socket = io('http://trade-alb-2057277700.ap-south-1.elb.amazonaws.com');
+            socket.on("fetchdata", (data)=>{
+                let firstImg = document.getElementById('firstImg');
+                firstImg.src = "data:image/png;base64, " + data.data;
+            })
+        </script>
+    </body>
 </html>
